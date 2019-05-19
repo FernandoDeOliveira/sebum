@@ -1,6 +1,6 @@
 <div align="center">
 
-# *Sebum*
+# *Sebum* 
 
 # Idealizado por [Vanessa Mota](https://gitlab.com/vanessaoliveira2706)
 
