@@ -16,3 +16,13 @@
 - Evitar a ociosidade da biblioteca pessal
 - Saber quais pessoas possuem os livros desejados
 - Conectar pessoas com afinidades literárias
+
+## Projeto e Desenvolvimento de Software
+### Levantamentos feitos para o desenvolvimento do aplicativo
+- [Requisitos](https://gitlab.com/FernandoDeOliveira/sebum/wikis/Requisitos)
+- [Descrição dos casos de uso](https://gitlab.com/FernandoDeOliveira/sebum/wikis/Descri%C3%A7%C3%A3o-dos-casos-de-uso)
+- [Diagrama dos casos de uso](https://gitlab.com/FernandoDeOliveira/sebum/wikis/Diagrama-dos-casos-de-uso)
+- [Diagrama de Classes](https://gitlab.com/FernandoDeOliveira/sebum/wikis/Diagrama-de-Classes)
+- [Diagramas de Estado](https://gitlab.com/FernandoDeOliveira/sebum/wikis/Diagramas-de-Estado)
+- [Diagramas de Atividade](https://gitlab.com/FernandoDeOliveira/sebum/wikis/Diagrama-de-atividade)
+- [Diagramas de Seqüencia](https://gitlab.com/FernandoDeOliveira/sebum/wikis/Diagramas-de-Seq%C3%BCencia)
