@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 import 'package:flutter/material.dart';
 import 'signup_page.dart';
 
@@ -19,5 +17,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
->>>>>>> 4-cadastro-front
