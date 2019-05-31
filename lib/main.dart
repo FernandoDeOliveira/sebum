@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'signup_page.dart';
+import 'package:sebum/pages/signup_page.dart';
+import '';
 
 void main() => runApp(MyApp());
 
