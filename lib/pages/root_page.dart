@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sebum/pages/login_signup_page.dart';
+import 'package:sebum/pages/login_page.dart';
 import 'package:sebum/services/authentication.dart';
 import 'package:sebum/pages/home_page.dart';
 
@@ -71,7 +71,7 @@ class _RootPageState extends State<RootPage> {
         return _buildWaitingScreen();
         break;
       case AuthStatus.NOT_LOGGED_IN:
-        return new LoginSignUpPage(
+        return new LoginPage(
           auth: widget.auth,
           onSignedIn: _onLoggedIn,
         );
