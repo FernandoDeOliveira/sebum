@@ -1,25 +1,20 @@
-import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'package:flutter/widgets.dart';
+import 'package:sebum/pages/signup_page.dart';
 import 'package:sebum/services/authentication.dart';
 
-class LoginPage extends StatefulWidget {
-  LoginPage({this.auth, this.onSignedIn});
+class LoginSignUpPage extends StatefulWidget {
+  LoginSignUpPage({this.auth, this.onSignedIn});
 
   final BaseAuth auth;
   final VoidCallback onSignedIn;
 
-  static String tag = 'login-page';
   @override
-  _LoginPageState createState() => _LoginPageState();
+  State<StatefulWidget> createState() => new _LoginSignUpPageState();
 }
 
 enum FormMode { LOGIN, SIGNUP }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginSignUpPageState extends State<LoginSignUpPage> {
   final _formKey = new GlobalKey<FormState>();
 
   String _email;
@@ -28,11 +23,13 @@ class _LoginPageState extends State<LoginPage> {
 
   // Initial form is login form
   FormMode _formMode = FormMode.LOGIN;
+  bool _isIos;
   bool _isLoading;
 
-  bool _validateAndSave(){
+  // Check if form is valid before perform login or signup
+  bool _validateAndSave() {
     final form = _formKey.currentState;
-    if (form.validate()){
+    if (form.validate()) {
       form.save();
       return true;
     }
@@ -45,21 +42,18 @@ class _LoginPageState extends State<LoginPage> {
       _errorMessage = "";
       _isLoading = true;
     });
-    if (_validateAndSave()){
+    if (_validateAndSave()) {
       String userId = "";
-      try{
-        if (_formMode == FormMode.LOGIN){
-          userId = await widget.auth.signIn(_email, _password);
-          print('Signed in: $userId');
-        }
+      try {
+        userId = await widget.auth.signIn(_email, _password);
+        print('Signed in: $userId');
         setState(() {
           _isLoading = false;
         });
-        if (userId.length > 0 && userId != null && _formMode == FormMode.LOGIN){
+        if (userId.length > 0 && userId != null && _formMode == FormMode.LOGIN) {
           widget.onSignedIn();
         }
-      }
-      catch (e) {
+      } catch (e) {
         print('Error: $e');
         setState(() {
           _isLoading = false;
@@ -69,14 +63,15 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+
   @override
-  void initState(){
+  void initState() {
     _errorMessage = "";
     _isLoading = false;
     super.initState();
   }
 
-  void _changeFromToLogin(){
+  void _changeFormToLogin() {
     _formKey.currentState.reset();
     _errorMessage = "";
     setState(() {
@@ -86,114 +81,138 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    
-    Widget logoHero = Hero(
-      tag: 'hero',
-      child: CircleAvatar(
-        backgroundColor: Colors.transparent,
-        radius: 48.0,
-        child: Image.asset('assets/img.png', height: 1500, width: 1500) ,
+    _isIos = Theme.of(context).platform == TargetPlatform.iOS;
+    return new Scaffold(
+        appBar: new AppBar(
+          title: new Text('Login'),
         ),
-    );
+        body: Stack(
+          children: <Widget>[
+            _showBody(),
+            _showCircularProgress(),
+          ],
+        ));
+  }
 
-    Widget _showCircularProgress(){
-      if(_isLoading){
-        return Center(child: CircularProgressIndicator());
-      }return Container(height: 0.0, width: 0.0);
-    }
+  Widget _showCircularProgress(){
+    if (_isLoading) {
+      return Center(child: CircularProgressIndicator());
+    } return Container(height: 0.0, width: 0.0,);
 
-    Widget _showErrorMessage(){
-      if (_errorMessage.length > 0 && _errorMessage != null) {
-        return new Text(
-          _errorMessage,
-          style: TextStyle(
+  }
+
+  Widget _showBody(){
+    return new Container(
+        padding: EdgeInsets.all(16.0),
+        child: new Form(
+          key: _formKey,
+          child: new ListView(
+            shrinkWrap: true,
+            children: <Widget>[
+              _showLogo(),
+              _showEmailInput(),
+              _showPasswordInput(),
+              _showLoginButton(),
+              _showCreateAccountButton(),
+              _showErrorMessage(),
+            ],
+          ),
+        ));
+  }
+
+  Widget _showErrorMessage() {
+    if (_errorMessage.length > 0 && _errorMessage != null) {
+      return new Text(
+        _errorMessage,
+        style: TextStyle(
             fontSize: 13.0,
             color: Colors.red,
             height: 1.0,
-            fontWeight: FontWeight.bold
-          ),
-        );
-      } else {
-        return new Container(
-          height: 0.0,
+            fontWeight: FontWeight.w300),
+      );
+    } else {
+      return new Container(
+        height: 0.0,
+      );
+    }
+  }
+
+  Widget _showLogo() {
+    return new Hero(
+      tag: 'hero',
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(0.0, 70.0, 0.0, 0.0),
+        child: CircleAvatar(
+          backgroundColor: Colors.transparent,
+          radius: 48.0,
+          child: Image.asset('assets/img.png', height: 1500, width: 1500),
+        ),
+      ),
+    );
+  }
+
+  Widget _showEmailInput() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0.0, 100.0, 0.0, 0.0),
+      child: new TextFormField(
+        maxLines: 1,
+        keyboardType: TextInputType.emailAddress,
+        autofocus: false,
+        decoration: new InputDecoration(
+            hintText: 'Email',
+            icon: new Icon(Icons.mail, color: Color(0xffAD57A5))
+        ),
+        validator: (value) => value.isEmpty ? 'Email can\'t be empty' : null,
+        onSaved: (value) => _email = value,
+      ),
+    );
+  }
+
+  Widget _showPasswordInput() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0.0, 15.0, 0.0, 0.0),
+      child: new TextFormField(
+        maxLines: 1,
+        obscureText: true,
+        autofocus: false,
+        decoration: new InputDecoration(
+            hintText: 'Password',
+            icon: new Icon(Icons.lock, color: Colors.purple)
+        ),
+        validator: (value) => value.isEmpty ? 'Password can\'t be empty' : null,
+        onSaved: (value) => _password = value,
+      ),
+    );
+  }
+
+
+
+  Widget _showCreateAccountButton() {
+    return new FlatButton(
+      child: new Text('Create an account',
+          style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.w300)),
+        onPressed: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => SignUpPage())
         );
       }
-    }
-
-
-    Widget emailFormField = TextFormField(
-      keyboardType: TextInputType.emailAddress,
-      autofocus: false,
-      decoration: InputDecoration(
-        hintText: 'Digite seu Email',
-        icon: new Icon(Icons.email, color: Color(0xffAD57A5)),
-        contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(32.0))
-      ),
-      validator: (value) => value.isEmpty ? 'Email não pode ser vazio' : null,
-      onSaved: (value) => _email = value,
-      );
-
-    Widget passwordFormField = TextFormField(
-      maxLines: 1,
-      autofocus: false,
-      obscureText: true,
-      decoration: InputDecoration(
-        icon: new Icon(Icons.lock, color: Color(0xffAD57A5)),
-        hintText: 'Senha',
-        contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(32.0)),
-      ),
-      validator: (value) => value.isEmpty ? 'Senha não pode ser vazia' : null,
-      onSaved: (value) => _password = value,
-      );
-
-    Widget loginButton = Padding(
-      padding: EdgeInsets.symmetric(vertical: 16.0),
-      child: Material(
-        borderRadius: BorderRadius.circular(30.0),
-        shadowColor: Colors.lightBlueAccent.shade100,
-        elevation: 5.0,
-        child: MaterialButton(
-          minWidth: 200.0,
-          height: 42.0,
-          onPressed: _validateLogin,
-          color: Colors.lightBlueAccent,
-          child: Text('Entrar', style: TextStyle(color: Colors.white)),
-        )
-    ),
-  );
-    
-    Widget forgotLabel = FlatButton(
-      child: Text(
-        'Forgot password?', 
-        style: TextStyle(color: Colors.black54)) , 
-      onPressed: () {},
     );
+  }
 
-
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Center(
-        child: ListView(
-          shrinkWrap: true,
-          padding: EdgeInsets.only(left: 24.0, right: 24.0),
-          children: <Widget>[
-            logoHero,
-            SizedBox(height: 48.0),
-            emailFormField,
-            _showCircularProgress(),
-            SizedBox(height: 8.0),
-            passwordFormField,
-            SizedBox(height: 24.0),
-            loginButton,
-            forgotLabel
-          ],
+  Widget _showLoginButton() {
+    return new Padding(
+        padding: EdgeInsets.fromLTRB(0.0, 45.0, 0.0, 0.0),
+        child: SizedBox(
+          height: 40.0,
+          child: new RaisedButton(
+            elevation: 5.0,
+            shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+            color: Colors.purple,
+            child: new Text('Login',
+                style: new TextStyle(fontSize: 20.0, color: Colors.white)),
+            onPressed: _validateLogin,
           ),
-      ),
-      
-    );
+        ));
   }
 }
