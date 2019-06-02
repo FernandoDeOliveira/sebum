@@ -94,7 +94,7 @@ class _SignUpPageState extends State<SignUpPage> {
         onPressed: () {
         },
         padding: EdgeInsets.all(12),
-        color: Colors.lightBlueAccent,
+        color: Colors.purple,
         child: Text('Registrar', style: TextStyle(color: Colors.white)),
       ),
     );
@@ -104,7 +104,9 @@ class _SignUpPageState extends State<SignUpPage> {
         'Já possui cadastro?',
         style: TextStyle(color: Colors.black54),
       ),
-      onPressed: () {},
+      onPressed: () {
+        Navigator.pop(context);
+      },
     );
 
     return Scaffold(

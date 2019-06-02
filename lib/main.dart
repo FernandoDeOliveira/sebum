@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'signup_page.dart';
+import 'package:sebum/pages/root_page.dart';
+import 'package:sebum/services/authentication.dart';
+
 
 void main() => runApp(MyApp());
 
@@ -10,10 +12,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Sebum',
       theme: ThemeData(
-        primarySwatch: Colors.lightBlue,
-        fontFamily: 'Nunito'
+        primarySwatch: Colors.purple,
       ),
-      home: SignUpPage(),
+      home: new RootPage(auth: new Auth()),
     );
   }
 }
