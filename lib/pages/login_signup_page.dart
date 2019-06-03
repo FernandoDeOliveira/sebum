@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sebum/pages/signup_page.dart';
+import 'package:flutter/painting.dart';
 import 'package:sebum/services/authentication.dart';
 
 class LoginPage extends StatefulWidget {
@@ -37,7 +37,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   // Perform login
-  void _validateLogin() async {
+  void _validateAndSubmit() async {
     setState(() {
       _errorMessage = "";
       _isLoading = true;
@@ -45,19 +45,29 @@ class _LoginPageState extends State<LoginPage> {
     if (_validateAndSave()) {
       String userId = "";
       try {
-        userId = await widget.auth.signIn(_email, _password);
-        print('Signed in: $userId');
+        if (_formMode == FormMode.LOGIN) {
+          userId = await widget.auth.signIn(_email, _password);
+          print('Signed in: $userId');
+        } else {
+          userId = await widget.auth.signUp(_email, _password);
+          print('Signed up user: $userId');
+        }
         setState(() {
           _isLoading = false;
         });
-        if (userId.length > 0 && userId != null && _formMode == FormMode.LOGIN) {
+
+        if (userId != null && userId.length > 0 && _formMode == FormMode.LOGIN) {
           widget.onSignedIn();
         }
+
       } catch (e) {
         print('Error: $e');
         setState(() {
           _isLoading = false;
-          _errorMessage = e.message;
+          if (_isIos) {
+            _errorMessage = e.details;
+          } else
+            _errorMessage = e.message;
         });
       }
     }
@@ -69,6 +79,14 @@ class _LoginPageState extends State<LoginPage> {
     _errorMessage = "";
     _isLoading = false;
     super.initState();
+  }
+
+  void _changeFormToSignUp(){
+    _formKey.currentState.reset();
+    _errorMessage = "";
+    setState(() {
+      _formMode = FormMode.SIGNUP;
+    });
   }
 
   void _changeFormToLogin() {
@@ -112,8 +130,8 @@ class _LoginPageState extends State<LoginPage> {
               _showLogo(),
               _showEmailInput(),
               _showPasswordInput(),
-              _showLoginButton(),
-              _showCreateAccountButton(),
+              _showPrimaryButton(),
+              _showSecondaryButton(),
               _showErrorMessage(),
             ],
           ),
@@ -187,20 +205,20 @@ class _LoginPageState extends State<LoginPage> {
 
 
 
-  Widget _showCreateAccountButton() {
+  Widget _showSecondaryButton() {
     return new FlatButton(
-      child: new Text('Create an account',
+      child: _formMode == FormMode.LOGIN
+          ? new Text('Criar conta',
+          style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.w300))
+          : new Text('Já possui conta? sign in',
           style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.w300)),
-        onPressed: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => SignUpPage())
-        );
-      }
+        onPressed: _formMode==FormMode.LOGIN
+            ? _changeFormToSignUp
+            : _changeFormToLogin
     );
   }
 
-  Widget _showLoginButton() {
+  Widget _showPrimaryButton() {
     return new Padding(
         padding: EdgeInsets.fromLTRB(0.0, 45.0, 0.0, 0.0),
         child: SizedBox(
@@ -209,9 +227,12 @@ class _LoginPageState extends State<LoginPage> {
             elevation: 5.0,
             shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
             color: Colors.purple,
-            child: new Text('Login',
+            child: _formMode == FormMode.LOGIN
+              ? new Text('Login',
+                style: new TextStyle(fontSize: 20.0, color: Colors.white))
+            : new Text('Criar conta',
                 style: new TextStyle(fontSize: 20.0, color: Colors.white)),
-            onPressed: _validateLogin,
+            onPressed: _validateAndSubmit,
           ),
         ));
   }
