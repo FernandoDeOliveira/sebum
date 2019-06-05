@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 
 
 
-class People extends StatelessWidget {
+class Bookcase extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
@@ -27,25 +28,17 @@ class _MyPage extends State<Page> {
         children: <Widget>[
           Container(
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(12.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Text(
-                      'People',
+                      'Minha Estante',
                       style: TextStyle(
-                          color: Colors.grey,
+                          color: Colors.purple,
                           fontFamily: 'Quicksand',
                           fontWeight: FontWeight.bold,
-                          fontSize: 12.0),
-                    ),
-                    Text(
-                      'that inspire you',
-                      style: TextStyle(
-                          color: Colors.blue,
-                          fontFamily: 'Quicksand',
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12.0),
+                          fontSize: 20.0),
                     )
                   ],
                 ),
@@ -58,12 +51,11 @@ class _MyPage extends State<Page> {
             mainAxisSpacing: 4.0,
             shrinkWrap: true,
             children: <Widget>[
-              _buildCard('Stan lee', 'the great', 1,"images/lee.png"),
-              _buildCard('Steve jobs', 'Visionary', 2,"images/jobs.png"),
-              _buildCard('Elon Musk', 'space settlement', 3,"images/musk.png"),
-              _buildCard('Google dev', 'inspire', 4,"images/dev.png"),
-
-SizedBox(height: 10.0,)
+              _buildCard('gramatica metodica', 'Napoleão mendes', "https://books.google.com/books/content?id=1u9PAAAAMAAJ&printsec=frontcover&img=1&zoom=5&source=gbs_api"),
+              _buildCard('livro de ouro da mitologia', 'Thomas Bulfinch',"http://books.google.com/books/content?id=wwKYjadAM5sC&printsec=frontcover&img=1&zoom=5&source=gbs_api"),
+              _buildCard('sao francisco', 'Tomas de Celano',"http://books.google.com/books/content?id=5A1qDwAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api"),
+              _buildCard('didascalicon', 'Hugo de São Vitor',"http://books.google.com/books/content?id=fVBwOdVw1DoC&printsec=frontcover&img=1&zoom=5&source=gbs_api"),
+              SizedBox(height: 10.0,),
             ],
           )
         ],
@@ -71,42 +63,37 @@ SizedBox(height: 10.0,)
     );
   }
 
-  Widget _buildCard(String name, String status, int cardIndex,String images) {
+  Widget _buildCard(String title, String author,String images) {
     return Card(
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0)
         ),
-        elevation: 7.0,
         child: Column(
           children: <Widget>[
-            SizedBox(height: 12.0),
             Stack(
                 children: <Widget>[
                   Container(
-                    height: 125.0,
-                    width: 125.0,
+                    height: 100.0,
+                    width: 80.0,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(30.0),
-                        color: Colors.blueGrey,
                         image: DecorationImage(
-                            image: AssetImage(images)
+                            image: NetworkImage(images)
                         )
                     ),
                   ),
 
                 ]),
-            SizedBox(height: 8.0),
             Text(
-              name,
+              title,
               style: TextStyle(
                 fontFamily: 'Quicksand',
                 fontWeight: FontWeight.bold,
                 fontSize: 15.0,
               ),
             ),
-            SizedBox(height: 5.0),
             Text(
-              status,
+              author,
               style: TextStyle(
                   fontFamily: 'Quicksand',
                   fontWeight: FontWeight.bold,
@@ -118,7 +105,9 @@ SizedBox(height: 10.0,)
 
           ],
         ),
-        margin: cardIndex.isEven? EdgeInsets.fromLTRB(10.0, 0.0, 25.0, 10.0):EdgeInsets.fromLTRB(25.0, 0.0, 5.0, 10.0)
+        margin: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 10.0),
+      color: Colors.white70
+      ,
     );
   }
 

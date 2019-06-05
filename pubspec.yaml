@@ -45,9 +45,13 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/img.png
+    - assets/images/logo.png
+    - assets/images/gramatica-metodica.jpg
+    - assets/images/livro-de-ouro-da-mito.jpeg
+    - assets/images/sao-francisco.jpg
+    - assets/images/didascalicon.jpg
   fonts:
-      - family: Nunito
+    - family: Nunito
 #        fonts:
   # To add assets to your application, add an assets section, like this:
   # assets:
