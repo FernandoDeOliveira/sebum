@@ -46,13 +46,11 @@ flutter:
 
   assets:
     - assets/images/logo.png
-    - assets/images/gramatica-metodica.jpg
-    - assets/images/livro-de-ouro-da-mito.jpeg
-    - assets/images/sao-francisco.jpg
-    - assets/images/didascalicon.jpg
+
   fonts:
     - family: Nunito
-#        fonts:
+      fonts:
+        - asset: assets/Nunito.ttf
   # To add assets to your application, add an assets section, like this:
   # assets:
   #  - images/a_dot_burr.jpeg
