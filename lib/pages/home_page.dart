@@ -256,7 +256,7 @@ class _HomePageState extends State<HomePage> {
         body: _showTodoList(),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            _showDialog(context);
+            widget.auth.add_to_bookcase('harrypotter');
           },
           tooltip: 'Increment',
           child: Icon(Icons.add),

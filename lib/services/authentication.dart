@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:sebum/models/book.dart';
 
 abstract class BaseAuth {
   Future<String> signIn(String email, String password);
@@ -13,12 +15,15 @@ abstract class BaseAuth {
 
   Future<void> sendEmailVerification();
 
+  Future<void> add_to_bookcase(String title);
+
 
   Future<bool> isEmailVerified();
 }
 
 class Auth implements BaseAuth {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final Firestore db = Firestore.instance;
 
   Future<String> signIn(String email, String password) async {
     FirebaseUser user = await _firebaseAuth.signInWithEmailAndPassword(
@@ -29,6 +34,7 @@ class Auth implements BaseAuth {
   Future<String> signUp(String email, String password) async {
     FirebaseUser user = await _firebaseAuth.createUserWithEmailAndPassword(
         email: email, password: password);
+    db.collection('users').document().setData({'email': email});
     return user.uid;
   }
 
@@ -51,6 +57,15 @@ class Auth implements BaseAuth {
   Future<bool> isEmailVerified() async {
     FirebaseUser user = await _firebaseAuth.currentUser();
     return user.isEmailVerified;
+  }
+
+  Future<void> add_to_bookcase(String title) async {
+    Book book = Book();
+    book.searchBook(title);
+    Future<FirebaseUser> user = getCurrentUser();
+    String userid = user.toString();
+    db.collection('users').document(
+        userid).collection('bookcase').add(book.data_like_json());
   }
 
 
