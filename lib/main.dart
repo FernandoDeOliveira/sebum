@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sebum/pages/bookcase.dart';
+import 'package:sebum/pages/home_page.dart';
+import 'package:sebum/pages/profile_page.dart';
 import 'package:sebum/pages/root_page.dart';
 import 'package:sebum/services/authentication.dart';
 
@@ -15,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.purple,
       ),
-      home: new Bookcase() //new RootPage(auth: new Auth()),
+      home: new ProfilePage() //new RootPage(auth: new Auth()),
     );
   }
 }
