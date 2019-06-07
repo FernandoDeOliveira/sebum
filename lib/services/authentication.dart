@@ -8,6 +8,10 @@ abstract class BaseAuth {
 
   Future<String> signUp(String email, String password);
 
+  Future<void> addNameUser(String name);
+
+//  Future<String> getNameUser();
+
   Future<FirebaseUser> getCurrentUser();
 
   Future<void> signOut();
@@ -15,7 +19,7 @@ abstract class BaseAuth {
 
   Future<void> sendEmailVerification();
 
-  Future<void> add_to_bookcase(String title);
+  Future<void> add_to_bookcase(Book book);
 
 
   Future<bool> isEmailVerified();
@@ -24,15 +28,16 @@ abstract class BaseAuth {
 class Auth implements BaseAuth {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final Firestore db = Firestore.instance;
+  FirebaseUser user;
 
   Future<String> signIn(String email, String password) async {
-    FirebaseUser user = await _firebaseAuth.signInWithEmailAndPassword(
+    user = await _firebaseAuth.signInWithEmailAndPassword(
         email: email, password: password);
     return user.uid;
   }
 
   Future<String> signUp(String email, String password) async {
-    FirebaseUser user = await _firebaseAuth.createUserWithEmailAndPassword(
+    user = await _firebaseAuth.createUserWithEmailAndPassword(
         email: email, password: password);
     db.collection('users').document().setData({'email': email});
     return user.uid;
@@ -59,14 +64,29 @@ class Auth implements BaseAuth {
     return user.isEmailVerified;
   }
 
-  Future<void> add_to_bookcase(String title) async {
-    Book book = Book();
-    book.searchBook(title);
-    Future<FirebaseUser> user = getCurrentUser();
-    String userid = user.toString();
+  Future<void> add_to_bookcase(Book book) async {
+    FirebaseUser user = await _firebaseAuth.currentUser();
+    var data = await book.data_like_json();
+    String userid = user.uid.toString();
     db.collection('users').document(
         userid).collection('bookcase').add(book.data_like_json());
   }
 
+  Future<void> addNameUser(String name) async {
+    FirebaseUser user = await _firebaseAuth.currentUser();
+    String userid = user.uid.toString();
+    db.collection('users').document(
+      userid).setData({'name': name});
+  }
+
+  /*Future<String> getNameUser() async {
+    FirebaseUser user = await _firebaseAuth.currentUser();
+    String userid = user.uid.toString();
+    String name;
+    name = db.collection('users').document(
+      userid).get().then((snap) => {
+      snap.do
+    });
+  }*/
 
 }
