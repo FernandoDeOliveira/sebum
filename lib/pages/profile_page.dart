@@ -159,7 +159,7 @@ class _ProfilePageState extends State<ProfilePage> {
       color: Theme.of(context).scaffoldBackgroundColor,
       padding: EdgeInsets.only(top: 8.0),
       child: Text(
-        "Get in Touch with ${_fullName.split(" ")[0]},",
+        "Entre em contato com ${_fullName.split(" ")[0]},",
         style: TextStyle(fontFamily: 'Roboto', fontSize: 16.0),
       ),
     );
@@ -217,12 +217,85 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
+Widget _buildCard(String title, String author,String images) {
+    return Card(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0)
+        ),
+        child: Column(
+          children: <Widget>[
+            Stack(
+                children: <Widget>[
+                  Container(
+                    height: 100.0,
+                    width: 80.0,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30.0),
+                        image: DecorationImage(
+                            image: NetworkImage(images)
+                        )
+                    ),
+                  ),
+
+                ]),
+            Text(
+              title,
+              style: TextStyle(
+                fontFamily: 'Quicksand',
+                fontWeight: FontWeight.bold,
+                fontSize: 15.0,
+              ),
+            ),
+            Text(
+              author,
+              style: TextStyle(
+                  fontFamily: 'Quicksand',
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12.0,
+                  color: Colors.grey
+              ),
+            ),
+            FlatButton.icon(
+              color: Colors.purple[200],
+              label: Text("Pedir Emprestado"),
+              icon: Icon(Icons.check),
+              onPressed: (){
+
+              },
+            ),
+
+
+          ],
+        ),
+        margin: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 10.0),
+      color: Colors.white70
+      ,
+    );
+  }
+
+  Widget _buildHorizontalList(){
+    return Container(
+      height: 200.0,
+      child: ListView (
+        scrollDirection: Axis.horizontal,
+        shrinkWrap: true,
+        children: <Widget>[
+          _buildCard('gramatica metodica', 'Napoleão mendes', "https://books.google.com/books/content?id=1u9PAAAAMAAJ&printsec=frontcover&img=1&zoom=5&source=gbs_api"),
+          _buildCard('livro de ouro da mitologia', 'Thomas Bulfinch',"http://books.google.com/books/content?id=wwKYjadAM5sC&printsec=frontcover&img=1&zoom=5&source=gbs_api"),
+          _buildCard('sao francisco', 'Tomas de Celano',"http://books.google.com/books/content?id=5A1qDwAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api"),
+          _buildCard('didascalicon', 'Hugo de São Vitor',"http://books.google.com/books/content?id=fVBwOdVw1DoC&printsec=frontcover&img=1&zoom=5&source=gbs_api"),
+        ],
+        ),
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
     return new Scaffold(
       appBar: new AppBar(title: new Text("Sebum")),
+      
       drawer: new Drawer(
         child: new ListView(
           children: <Widget>[
@@ -240,7 +313,15 @@ class _ProfilePageState extends State<ProfilePage> {
               trailing: new Icon(Icons.arrow_upward),
             ),
              new ListTile(
+              title: new Text("Meu Perfil"),
+              trailing: new Icon(Icons.arrow_right),
+            ),
+             new ListTile(
               title: new Text("Minha Estante"),
+              trailing: new Icon(Icons.arrow_right),
+            ),
+             new ListTile(
+              title: new Text("Sair"),
               trailing: new Icon(Icons.arrow_right),
             ),
             new Divider(),
@@ -269,11 +350,12 @@ class _ProfilePageState extends State<ProfilePage> {
                   SizedBox(height: 10.0),
                   _buildGetInTouch(context),
                   SizedBox(height: 8.0),
-                  _buildButtons(),    
+                  _buildButtons(),
+                  _buildHorizontalList()
                 ],
               ),
             ),
-          )
+          ),
         ],
       )
       
