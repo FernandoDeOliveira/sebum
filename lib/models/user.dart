@@ -18,10 +18,11 @@ class User {
   Future<FirebaseUser> getUser() async {
     return auth.getCurrentUser();
   }
-  add_to_bookcase(String title) {
-    Book book = Book();
-    book.searchBook(title);
-    db.collection('users').document(getUserId()).collection('bookcase').add(book.data_like_json());
+  add_to_bookcase(Book book) {
+    db.collection('users')
+        .document(getUserId())
+        .collection('bookcase')
+        .add(book.data_like_json());
   }
 
 
