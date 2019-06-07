@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:sebum/models/book.dart';
 import 'package:sebum/services/authentication.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:sebum/models/todo.dart';
 import 'dart:async';
+
+import 'package:sebum/services/book_api.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.auth, this.userId, this.onSignedOut})
@@ -255,8 +258,9 @@ class _HomePageState extends State<HomePage> {
         ),
         body: _showTodoList(),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            widget.auth.add_to_bookcase('harrypotter');
+          onPressed: () async {
+            // APENAS PARA TEST
+            widget.auth.addNameUser('fulano');
           },
           tooltip: 'Increment',
           child: Icon(Icons.add),

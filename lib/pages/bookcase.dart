@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:sebum/models/book.dart';
 import 'dart:convert' as convert;
+
+import 'package:sebum/services/book_api.dart';
 
 
 
@@ -76,23 +79,12 @@ class _MyPage extends State<Page> {
     );
   }
 
+  // APENAS PARA TESTES
   Future getBook() async {
-    var url = "https://www.googleapis.com/books/v1/volumes?q=";
-
-
-    var response = await http.get(url + 'harrypotter');
-    if (response.statusCode == 200) {
-      var jsonResponse = convert.jsonDecode(response.body);
-      var firstItem = jsonResponse['items'][0];
-      var volumeInfo = firstItem['volumeInfo'];
-      var title = volumeInfo['title'];
-      var author = volumeInfo['authors'][0];
-      var ISBN = volumeInfo['industryIdentifiers'][0]['identifier'];
-      var url_photo = volumeInfo['imageLinks']['smallThumbnail'];
-      print('title: $title \n author: $author\nISBB: $ISBN\nurl_photo: $url_photo' );
-    } else {
-      print ("Request failed with status: ${response.statusCode}.");
-    }
+    API api = API();
+    List<Book> books;
+    books = await api.get_books('harrypotter', qty_books: 4);
+    books.forEach((book) => print(book.title));
   }
 
 
