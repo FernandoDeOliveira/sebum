@@ -1,5 +1,17 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+
+import 'package:http/http.dart' as http;
+import 'package:sebum/models/book.dart';
+import 'dart:convert' as convert;
+
+import 'package:sebum/services/book_api.dart';
+
+
+
+
+
 
 
 
@@ -56,12 +68,25 @@ class _MyPage extends State<Page> {
               _buildCard('sao francisco', 'Tomas de Celano',"http://books.google.com/books/content?id=5A1qDwAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api"),
               _buildCard('didascalicon', 'Hugo de São Vitor',"http://books.google.com/books/content?id=fVBwOdVw1DoC&printsec=frontcover&img=1&zoom=5&source=gbs_api"),
               SizedBox(height: 10.0,),
+              FlatButton(
+                child: Text('print'),
+                onPressed: getBook,
+              ),
             ],
           )
         ],
       ),
     );
   }
+
+  // APENAS PARA TESTES
+  Future getBook() async {
+    API api = API();
+    List<Book> books;
+    books = await api.get_books('harrypotter', qty_books: 4);
+    books.forEach((book) => print(book.title));
+  }
+
 
   Widget _buildCard(String title, String author,String images) {
     return Card(
