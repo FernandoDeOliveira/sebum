@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.purple,
       ),
-      home: new Bookcase() //new RootPage(auth: new Auth()),
+      home: new RootPage(auth: new Auth()) //new Bookcase() //
     );
   }
 }
