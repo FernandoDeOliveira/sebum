@@ -17,11 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.purple,
       ),
-<<<<<<< lib/main.dart
-      home: new ProfilePage() //new RootPage(auth: new Auth()),
-=======
-      home: new RootPage(auth: new Auth()) //new Bookcase() //
->>>>>>> lib/main.dart
+      home: new RootPage(auth: new Auth())
     );
   }
 }

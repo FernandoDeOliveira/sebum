@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sebum/pages/login_signup_page.dart';
+import 'package:sebum/pages/profile_page.dart';
 import 'package:sebum/services/authentication.dart';
 import 'package:sebum/pages/home_page.dart';
 
@@ -78,7 +79,7 @@ class _RootPageState extends State<RootPage> {
         break;
       case AuthStatus.LOGGED_IN:
         if (_userId.length > 0 && _userId != null) {
-          return new HomePage(
+          return new ProfilePage(
             userId: _userId,
             auth: widget.auth,
             onSignedOut: _onSignedOut,

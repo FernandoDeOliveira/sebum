@@ -1,6 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:sebum/services/authentication.dart';
+
+import 'bookcase.dart';
 
 class ProfilePage extends StatefulWidget {
+  ProfilePage({Key key, this.auth, this.userId, this.onSignedOut})
+      : super(key: key);
+
+  final BaseAuth auth;
+  final VoidCallback onSignedOut;
+  final String userId;
+
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
@@ -12,6 +22,8 @@ class _ProfilePageState extends State<ProfilePage> {
   final String _userloans = "10"; 
   final String _loaned = "5";
   final String _score = "4.5";
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
 
   Widget _buildCoverImage(Size screenSize){
     return Container(
@@ -289,6 +301,14 @@ Widget _buildCard(String title, String author,String images) {
     );
   }
 
+_signOut() async {
+    try {
+      await widget.auth.signOut();
+      widget.onSignedOut();
+    } catch (e) {
+      print(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -308,21 +328,29 @@ Widget _buildCard(String title, String author,String images) {
                 ),
               ),
             ),
-            new ListTile(
-              title: new Text("Home"),
-              trailing: new Icon(Icons.arrow_upward),
-            ),
              new ListTile(
               title: new Text("Meu Perfil"),
               trailing: new Icon(Icons.arrow_right),
+              onTap: (){
+                Navigator.pop(context);
+              }
             ),
              new ListTile(
               title: new Text("Minha Estante"),
               trailing: new Icon(Icons.arrow_right),
+              onTap: (){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Bookcase())
+                  );
+              }
             ),
              new ListTile(
               title: new Text("Sair"),
               trailing: new Icon(Icons.arrow_right),
+              onTap: () {
+                _signOut();
+              }
             ),
             new Divider(),
             new ListTile(
