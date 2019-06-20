@@ -16,7 +16,7 @@ class API{
     var response = await http.get(_url + search);
     List<Book> books = new List<Book>();
     if (response.statusCode == 200) {
-      var qty = (qty_books == null) ? 0 : qty_books;
+      var qty = (qty_books == null) ? 1 : qty_books;
       var jsonResponse = convert.jsonDecode(response.body);
 
       for (int index=0; index<qty; index++) {
