@@ -11,7 +11,7 @@ class API{
   final _url = "https://www.googleapis.com/books/v1/volumes?q=";
 
 
-  Future<List<Book>> get_books(String search, {int qty_books}) async {
+  Future<List<Book>> fetchBooks(String search, {int qty_books}) async {
 
     var response = await http.get(_url + search);
     List<Book> books = new List<Book>();
