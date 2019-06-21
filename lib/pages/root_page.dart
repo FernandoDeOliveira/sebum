@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:sebum/models/user.dart';
 import 'package:sebum/pages/login_signup_page.dart';
 import 'package:sebum/pages/profile_page.dart';
 import 'package:sebum/services/authentication.dart';
 import 'package:sebum/pages/home_page.dart';
+import 'package:sebum/services/firestoreDB.dart';
 
 class RootPage extends StatefulWidget {
   RootPage({this.auth});
@@ -79,10 +81,12 @@ class _RootPageState extends State<RootPage> {
         break;
       case AuthStatus.LOGGED_IN:
         if (_userId.length > 0 && _userId != null) {
+          Future<User> user = DB().getUser(_userId);
           return new ProfilePage(
-            userId: _userId,
+            user: user,
             auth: widget.auth,
             onSignedOut: _onSignedOut,
+
           );
         } else return _buildWaitingScreen();
         break;

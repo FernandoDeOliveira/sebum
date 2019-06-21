@@ -1,28 +1,44 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
+import 'package:sebum/models/user.dart';
 import 'package:sebum/services/authentication.dart';
+import 'package:sebum/services/firestoreDB.dart';
 
 import 'bookcase.dart';
 
 class ProfilePage extends StatefulWidget {
-  ProfilePage({Key key, this.auth, this.userId, this.onSignedOut})
+  ProfilePage({Key key, this.auth, this.user, this.onSignedOut})
       : super(key: key);
 
   final BaseAuth auth;
   final VoidCallback onSignedOut;
-  final String userId;
+  final Future<User> user;
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  final String _fullName = "Vanessa Oliveira";
+  String _fullName;
   final String _status = "Estudante";
   final String _bio = "Estudante de Ciência e Tecnologia na UFMA. Areas de Interesse: Programação, Política e Economia.";
-  final String _userloans = "10"; 
+  final String _userloans = "10";
   final String _loaned = "5";
   final String _score = "4.5";
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+  @override
+  void initState(){
+    super.initState();
+      widget.user.then((user) => _fullName = user.name);
+  }
+
+  Future<User> updateUserParametrs() async{
+    Future<User> user;
+    user = widget.user.then((user) => user);
+    return user;
+}
 
 
   Widget _buildCoverImage(Size screenSize){
@@ -37,14 +53,14 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-   Widget _buildProfileImage() {
+   Widget _buildProfileImage(String photo_url) {
     return Center(
       child: Container(
         width: 140.0,
         height: 140.0,
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/images/foto.jpeg'),
+            image: NetworkImage(photo_url),
             fit: BoxFit.cover,
           ),
           borderRadius: BorderRadius.circular(80.0),
@@ -57,7 +73,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget _buildFullName() {
+  Widget _buildFullName(String name) {
     TextStyle _nameTextStyle = TextStyle(
       fontFamily: 'Roboto',
       color: Colors.black,
@@ -66,7 +82,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
 
     return Text(
-      _fullName,
+      name,
       style: _nameTextStyle,
     );
   }
@@ -119,7 +135,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget _buildStatContainer() {
+  Widget _buildStatContainer(String loans, String loaned) {
     return Container(
       height: 80.0,
       margin: EdgeInsets.only(top: 8.0),
@@ -129,15 +145,15 @@ class _ProfilePageState extends State<ProfilePage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
-          _buildStatItem("Emprestimos", _userloans),
-          _buildStatItem("Emprestados", _loaned),
+          _buildStatItem("Emprestimos", loans),
+          _buildStatItem("Emprestados", loaned),
           _buildStatItem("Pontuação", _score),
         ],
       ),
     );
   }
 
-  Widget _buildBio(BuildContext context) {
+  Widget _buildBio(BuildContext context, String bios) {
     TextStyle bioTextStyle = TextStyle(
       fontFamily: 'Spectral',
       fontWeight: FontWeight.w400,//try changing weight to w500 if not thin
@@ -150,7 +166,7 @@ class _ProfilePageState extends State<ProfilePage> {
       color: Theme.of(context).scaffoldBackgroundColor,
       padding: EdgeInsets.all(8.0),
       child: Text(
-        _bio,
+        bios,
         textAlign: TextAlign.center,
         style: bioTextStyle,
       ),
@@ -365,24 +381,30 @@ _signOut() async {
         children: <Widget>[
           _buildCoverImage(screenSize),
           SafeArea(
-            child: SingleChildScrollView(
-              child: Column(
-                children: <Widget>[
-                  SizedBox(height: 100),
-                  _buildProfileImage(),
-                  _buildFullName(),
-                   _buildStatus(context),
-                  _buildStatContainer(),
-                  _buildBio(context),
-                  _buildSeparator(screenSize),
-                  SizedBox(height: 10.0),
-                  _buildGetInTouch(context),
-                  SizedBox(height: 8.0),
-                  _buildButtons(),
-                  _buildHorizontalList()
-                ],
-              ),
-            ),
+            child: FutureBuilder(
+              future: updateUserParametrs(),
+              builder: (BuildContext context, AsyncSnapshot snapshot){
+                User user = snapshot.data;
+                return SingleChildScrollView(
+                  child: Column(
+                    children: <Widget>[
+                      SizedBox(height: 100),
+                      _buildProfileImage(user.photo_url),
+                      _buildFullName(user.name),
+                      _buildStatus(context),
+                      _buildStatContainer(user.loads.toString(), user.borrowed.toString()),
+                      _buildBio(context, user.bios),
+                      _buildSeparator(screenSize),
+                      SizedBox(height: 10.0),
+                      _buildGetInTouch(context),
+                      SizedBox(height: 8.0),
+                      _buildButtons(),
+                      _buildHorizontalList()
+                    ],
+                  ),
+                );
+              },
+            )
           ),
         ],
       )
