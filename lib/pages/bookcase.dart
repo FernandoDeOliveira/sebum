@@ -83,7 +83,7 @@ class _MyPage extends State<Page> {
   Future getBook() async {
     API api = API();
     List<Book> books;
-    books = await api.get_books('harrypotter', qty_books: 4);
+    books = await api.fetchBooks('harrypotter', qty_books: 4);
     books.forEach((book) => print(book.title));
   }
 

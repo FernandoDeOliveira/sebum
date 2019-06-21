@@ -11,12 +11,12 @@ class API{
   final _url = "https://www.googleapis.com/books/v1/volumes?q=";
 
 
-  Future<List<Book>> get_books(String search, {int qty_books}) async {
+  Future<List<Book>> fetchBooks(String search, {int qty_books}) async {
 
     var response = await http.get(_url + search);
     List<Book> books = new List<Book>();
     if (response.statusCode == 200) {
-      var qty = (qty_books == null) ? 0 : qty_books;
+      var qty = (qty_books == null) ? 1 : qty_books;
       var jsonResponse = convert.jsonDecode(response.body);
 
       for (int index=0; index<qty; index++) {
