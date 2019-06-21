@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sebum/pages/bookcase.dart';
 import 'package:sebum/pages/home_page.dart';
-import 'package:sebum/pages/partials/book_shearch_widget.dart';
+import 'package:sebum/pages/partials/book_search_widget.dart';
+import 'package:sebum/pages/profile_page.dart';
 import 'package:sebum/pages/root_page.dart';
 import 'package:sebum/services/authentication.dart';
 
