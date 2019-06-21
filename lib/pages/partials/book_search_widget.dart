@@ -25,7 +25,7 @@ class _BookSearchWidgetState extends State<BookSearchWidget> {
   List<dynamic> _list;
   bool _isSearching;
   String _searchText = "";
-  List searchresult = new List();
+  List<Book_mock> searchresult = new List<Book_mock>();
 
   _BookSearchWidgetState() {
     _controller.addListener(() {
@@ -51,15 +51,14 @@ class _BookSearchWidgetState extends State<BookSearchWidget> {
   }
 
   void values() {
-    _list = List();
-    _list.add("Indian rupee");
-    _list.add("United States dollar");
-    _list.add("Australian dollar");
-    _list.add("Euro");
-    _list.add("British pound");
-    _list.add("Yemeni rial");
-    _list.add("Japanese yen");
-    _list.add("Hong Kong dollar");
+    _list = List<Book_mock>();
+    _list.add(Book_mock());
+    _list.add(Book_mock());
+    _list.add(Book_mock());
+    _list.add(Book_mock());
+    _list.add(Book_mock());
+    _list.add(Book_mock());
+    _list.add(Book_mock());
   }
 
   @override
@@ -78,19 +77,17 @@ class _BookSearchWidgetState extends State<BookSearchWidget> {
                     shrinkWrap: true,
                     itemCount: searchresult.length,
                     itemBuilder: (BuildContext context, int index) {
-                      String listData = searchresult[index];
-                      return new ListTile(
-                        title: new Text(listData.toString()),
-                      );
+                      Book_mock listData = searchresult[index];
+                      return BookCard(listData);
                     },
                   )
                       : new ListView.builder(
                     shrinkWrap: true,
                     itemCount: _list.length,
                     itemBuilder: (BuildContext context, int index) {
-                      String listData = _list[index];
+                      Book_mock listData = _list[index];
                       return new ListTile(
-                        title: new Text(listData.toString()),
+                        title: new BookCard(listData),
                       );
                     },
                   ))
@@ -98,6 +95,50 @@ class _BookSearchWidgetState extends State<BookSearchWidget> {
           ),
         ));
   }
+
+  
+  Widget _buildCard(Book_mock book){
+  return Card(
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(10.0)
+      ),
+    child: new Container(
+      child: Row (
+        children: <Widget>[
+          new Container(
+            height: 200.0,
+            width: 400.0,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30.0),
+              image: DecorationImage(
+                image: NetworkImage(book.url_photo))
+              ),
+          ),
+          new Container(
+            child: new Column(
+              children: <Widget>[
+                Text(book.title),
+                Text(book.author),
+                FlatButton.icon(
+                  color: Colors.purple[200],
+                  label: Text("Add"),
+                  icon: Icon(Icons.check),
+                  onPressed: (){
+
+                  },
+
+                )
+
+              ],
+            ),
+          )
+        ],
+        )
+    ),  
+
+    
+  );
+}
 
   Widget buildAppBar(BuildContext context) {
     return new AppBar(centerTitle: true, title: appBarTitle, actions: <Widget>[
@@ -156,14 +197,64 @@ class _BookSearchWidgetState extends State<BookSearchWidget> {
     searchresult.clear();
     if (_isSearching != null) {
       for (int i = 0; i < _list.length; i++) {
-        String data = _list[i];
-        if (data.toLowerCase().contains(searchText.toLowerCase())) {
+        Book_mock data = _list[i];
+        if (data.title.toLowerCase().contains(searchText.toLowerCase())) {
           searchresult.add(data);
         }
       }
     }
   }
 }
+
+class BookCard extends StatelessWidget{
+    BookCard(this.book);
+
+    final Book_mock book;
+    @override
+    Widget build(BuildContext context){
+      return Card(
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(10.0)
+      ),
+    child: new Container( 
+      child: Row (
+        children: <Widget>[
+          new Container(
+            height: 100.0,
+            width: 100.0,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30.0),
+              image: DecorationImage(
+                image: NetworkImage(book.url_photo))
+              ),
+          ),
+          new Container(
+            child: new Column(
+              children: <Widget>[
+                Text(book.title),
+                Text(book.author),
+                FlatButton.icon(
+                  color: Colors.purple[200],
+                  label: Text("Add"),
+                  icon: Icon(Icons.check),
+                  onPressed: (){
+
+                  },
+
+                )
+
+              ],
+            ),
+          )
+        ],
+        )
+    ),  
+
+    
+  );
+      
+    }
+  }
 
 
 
