@@ -5,7 +5,7 @@ class Book {
   String _url_photo;
   bool _isAvailable;
 
-  data_like_json () => {
+  dataLikeJson () => {
     'title': _title,
     'author': _author,
     'url_photo': _url_photo,
