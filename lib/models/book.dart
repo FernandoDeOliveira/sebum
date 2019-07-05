@@ -2,27 +2,27 @@ class Book {
   String _title;
   String _author;
   String _ISBN;
-  String _url_photo;
-  bool _isAvailable;
+  String _photo_url;
+  List<dynamic> _usersOwningTheBooks;
 
   dataLikeJson () => {
     'title': _title,
     'author': _author,
-    'url_photo': _url_photo,
+    'photo_url': _photo_url,
     'ISBN': _ISBN,
-    'isAvailabe': _isAvailable
+    'usersOwningTheBooks': _usersOwningTheBooks
   };
 
-  bool get isAvailable => _isAvailable;
+  List<dynamic> get usersOwningTheBooks => _usersOwningTheBooks;
 
-  set isAvailable(bool value) {
-    _isAvailable = value;
+  set usersOwningTheBooks(List<dynamic> value){
+    _usersOwningTheBooks = value;
   }
 
-  String get url_photo => _url_photo;
+  String get photo_url => _photo_url;
 
-  set url_photo(String value) {
-    _url_photo = value;
+  set photo_url(String value) {
+    _photo_url = value;
   }
 
   String get ISBN => _ISBN;
@@ -42,5 +42,15 @@ class Book {
   set title(String value) {
     _title = value;
   }
+
+  fromMap(Map<String, dynamic> data){
+    this.author = data['author'];
+    this.photo_url = data['photo_url'];
+    this.title = data['title'];
+    this.usersOwningTheBooks = data['usersOwningTheBooks'];
+    this.ISBN = data['ISBN'];
+
+  }
+  
 
 }
