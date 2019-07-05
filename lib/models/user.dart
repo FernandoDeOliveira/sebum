@@ -7,20 +7,30 @@ import 'package:sebum/services/authentication.dart';
 
 
 class User {
+  String bios;
+  String photo_url;
+  List<dynamic> borrowedToUsers;
+  List<dynamic> borrowedBooks;
+  String id;
+  List<dynamic> loanedBooks;
+  String phone;
   String name;
   String email;
-  int borrowed;
-  String photo_url;
-  String bios;
-  int loads;
+  List<dynamic> loanedToUsers;
+  List<dynamic> bookcase;
 
   fromMap(Map<String, dynamic> data){
+    this.bios = data['bios'];
+    this.photo_url = data['photo_url'];
+    this.borrowedToUsers = data['borrowedToUsers'];
+    this.borrowedBooks = data['borrowedBooks'];
+    this.id = data['id'];
+    this.loanedBooks = data['loanedBooks'];
+    this.phone = data['phone'];
     this.name = data['name'];
     this.email = data['email'];
-    this.borrowed = data['borrowed'];
-    this.photo_url = data['photo_url'];
-    this.bios = data['bios'];
-    this.loads = data['load'];
+    this.loanedToUsers = data['loanedToUsers'];
+    this.bookcase = data['bookcase'];
   }
 
 }
