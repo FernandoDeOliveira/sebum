@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:sebum/models/book.dart';
 import 'package:sebum/models/user.dart';
 import 'package:sebum/services/authentication.dart';
 import 'package:sebum/services/firestoreDB.dart';
@@ -8,12 +9,12 @@ import 'package:sebum/services/firestoreDB.dart';
 import 'bookcase.dart';
 
 class ProfilePage extends StatefulWidget {
-  ProfilePage({Key key, this.auth, this.user, this.onSignedOut})
+  ProfilePage({Key key, this.auth, this.userId, this.onSignedOut})
       : super(key: key);
 
   final BaseAuth auth;
   final VoidCallback onSignedOut;
-  final Future<User> user;
+  final String userId;
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
@@ -31,15 +32,15 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState(){
     super.initState();
-      widget.user.then((user) => _fullName = user.name);
   }
 
-  Future<User> updateUserParametrs() async{
-    Future<User> user;
-    user = widget.user.then((user) => user);
-    return user;
+  Future<User> getUserFromDB() async{
+    return  DB().getUser(widget.userId);
 }
 
+  Future<List<Book>> getUserBooksFromDB() async{
+    return DB().getUserBooks(widget.userId);
+  }
 
   Widget _buildCoverImage(Size screenSize){
     return Container(
@@ -135,7 +136,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget _buildStatContainer(String loans, String loaned) {
+  Widget _buildStatContainer(int loans, int loaned) {
     return Container(
       height: 80.0,
       margin: EdgeInsets.only(top: 8.0),
@@ -145,8 +146,8 @@ class _ProfilePageState extends State<ProfilePage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
-          _buildStatItem("Emprestimos", loans),
-          _buildStatItem("Emprestados", loaned),
+          _buildStatItem("Emprestimos", loans.toString()),
+          _buildStatItem("Emprestados", loaned.toString()),
           _buildStatItem("Pontuação", _score),
         ],
       ),
@@ -187,7 +188,7 @@ class _ProfilePageState extends State<ProfilePage> {
       color: Theme.of(context).scaffoldBackgroundColor,
       padding: EdgeInsets.only(top: 8.0),
       child: Text(
-        "Entre em contato com ${_fullName.split(" ")[0]},",
+        "Entre em contato com ${_fullName},",
         style: TextStyle(fontFamily: 'Roboto', fontSize: 16.0),
       ),
     );
@@ -304,16 +305,25 @@ Widget _buildCard(String title, String author,String images) {
   Widget _buildHorizontalList(){
     return Container(
       height: 200.0,
-      child: ListView (
-        scrollDirection: Axis.horizontal,
-        shrinkWrap: true,
-        children: <Widget>[
-          _buildCard('gramatica metodica', 'Napoleão mendes', "https://books.google.com/books/content?id=1u9PAAAAMAAJ&printsec=frontcover&img=1&zoom=5&source=gbs_api"),
-          _buildCard('livro de ouro da mitologia', 'Thomas Bulfinch',"http://books.google.com/books/content?id=wwKYjadAM5sC&printsec=frontcover&img=1&zoom=5&source=gbs_api"),
-          _buildCard('sao francisco', 'Tomas de Celano',"http://books.google.com/books/content?id=5A1qDwAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api"),
-          _buildCard('didascalicon', 'Hugo de São Vitor',"http://books.google.com/books/content?id=fVBwOdVw1DoC&printsec=frontcover&img=1&zoom=5&source=gbs_api"),
-        ],
-        ),
+      child: FutureBuilder(
+        future: getUserBooksFromDB(),
+        builder: (BuildContext context, AsyncSnapshot snapshot){
+          if (snapshot.data == null) {
+            return Center(child: CircularProgressIndicator());
+          } else{
+          List<Book> books = snapshot.data;
+          return ListView (
+            scrollDirection: Axis.horizontal,
+            shrinkWrap: true,
+            children: <Widget>[
+              _buildCard(books[0].title, books[0].author, books[0].photo_url),
+              _buildCard('livro de ouro da mitologia', 'Thomas Bulfinch',"http://books.google.com/books/content?id=wwKYjadAM5sC&printsec=frontcover&img=1&zoom=5&source=gbs_api"),
+              _buildCard('sao francisco', 'Tomas de Celano',"http://books.google.com/books/content?id=5A1qDwAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api"),
+              _buildCard('didascalicon', 'Hugo de São Vitor',"http://books.google.com/books/content?id=fVBwOdVw1DoC&printsec=frontcover&img=1&zoom=5&source=gbs_api"),
+            ],
+          );}
+        },
+      ), // fim listview
     );
   }
 
@@ -333,13 +343,17 @@ _signOut() async {
       appBar: new AppBar(title: new Text("Sebum")),
       
       drawer: new Drawer(
-        child: new ListView(
+        child: FutureBuilder(
+          future: getUserFromDB(),
+            builder: (BuildContext context, AsyncSnapshot snapshot){
+            User user = snapshot.data;
+            return  ListView(
           children: <Widget>[
             new UserAccountsDrawerHeader(
-              accountName: new Text("Vanessa Oliveira"),
-              accountEmail: new Text("vanessaoliveira2706@gmail.com"),
+              accountName: new Text(user.name),
+              accountEmail: new Text(user.email),
               currentAccountPicture: new GestureDetector(
-                child: new CircleAvatar( backgroundImage: AssetImage('assets/images/foto.jpeg'),
+                child: new CircleAvatar( backgroundImage: NetworkImage(user.photo_url),
                   
                 ),
               ),
@@ -375,40 +389,45 @@ _signOut() async {
               onTap: () {Navigator.pop(context);},
             ),
           ],
-        ),
+        );}), // fim do listView
       ),
       body: new Stack(
         children: <Widget>[
           _buildCoverImage(screenSize),
           SafeArea(
-            child: FutureBuilder(
-              future: updateUserParametrs(),
-              builder: (BuildContext context, AsyncSnapshot snapshot){
-                User user = snapshot.data;
-                return SingleChildScrollView(
-                  child: Column(
-                    children: <Widget>[
-                      SizedBox(height: 100),
-                      _buildProfileImage(user.photo_url),
-                      _buildFullName(user.name),
-                      _buildStatus(context),
-                      _buildStatContainer(user.loads.toString(), user.borrowed.toString()),
-                      _buildBio(context, user.bios),
-                      _buildSeparator(screenSize),
-                      SizedBox(height: 10.0),
-                      _buildGetInTouch(context),
-                      SizedBox(height: 8.0),
-                      _buildButtons(),
-                      _buildHorizontalList()
-                    ],
-                  ),
-                );
-              },
-            )
+              child: FutureBuilder(
+                future: getUserFromDB(),
+                builder: (BuildContext context, AsyncSnapshot snapshot){
+                  if(snapshot.data == null){
+                    return Center(child: CircularProgressIndicator());
+                  } else{
+                    User user = snapshot.data;
+                    return SingleChildScrollView(
+                      child: Column(
+                        children: <Widget>[
+                          SizedBox(height: 100),
+                          _buildProfileImage(user.photo_url),
+                          _buildFullName(user.name),
+                          _buildStatus(context),
+                          _buildStatContainer(
+                              user.loanedBooks.length,
+                              user.borrowedBooks.length),
+                          _buildBio(context, user.bios),
+                          _buildSeparator(screenSize),
+                          SizedBox(height: 10.0),
+                          _buildGetInTouch(context),
+                          SizedBox(height: 8.0),
+                          _buildButtons(),
+                          _buildHorizontalList()
+                        ],
+                      ),
+                    );
+                  }
+                  },
+              )
           ),
         ],
       )
-      
     );
   }
 }
