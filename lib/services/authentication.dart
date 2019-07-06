@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:sebum/models/book.dart';
-import 'package:sebum/models/user.dart';
 
 abstract class BaseAuth {
   Future<String> signIn(String email, String password);
