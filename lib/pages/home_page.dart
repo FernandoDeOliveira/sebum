@@ -258,9 +258,8 @@ class _HomePageState extends State<HomePage> {
         ),
         body: _showTodoList(),
         floatingActionButton: FloatingActionButton(
-          onPressed: () async {
+          onPressed: ()  {
             // APENAS PARA TEST
-            widget.auth.addNameUser('fulano');
           },
           tooltip: 'Increment',
           child: Icon(Icons.add),

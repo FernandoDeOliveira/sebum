@@ -27,7 +27,7 @@ class API{
         book.title = volumeInfo['title'];
         book.author = volumeInfo['authors'][0];
         book.ISBN = volumeInfo['industryIdentifiers'][0]['identifier'];
-        book.url_photo = volumeInfo['imageLinks']['smallThumbnail'];
+        book.photo_url = volumeInfo['imageLinks']['smallThumbnail'];
         books.add(book);
       }
       return books;

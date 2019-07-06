@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:sebum/pages/login_signup_page.dart';
 import 'package:sebum/pages/profile_page.dart';
 import 'package:sebum/services/authentication.dart';
-import 'package:sebum/pages/home_page.dart';
 
 class RootPage extends StatefulWidget {
   RootPage({this.auth});
@@ -83,6 +82,7 @@ class _RootPageState extends State<RootPage> {
             userId: _userId,
             auth: widget.auth,
             onSignedOut: _onSignedOut,
+
           );
         } else return _buildWaitingScreen();
         break;

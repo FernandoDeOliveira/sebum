@@ -7,23 +7,30 @@ import 'package:sebum/services/authentication.dart';
 
 
 class User {
-  User({this.auth});
-  Firestore db = Firestore.instance;
-  final BaseAuth auth;
+  String bios;
+  String photo_url;
+  List<dynamic> borrowedToUsers;
+  List<dynamic> borrowedBooks;
+  String id;
+  List<dynamic> loanedBooks;
+  String phone;
   String name;
+  String email;
+  List<dynamic> loanedToUsers;
+  List<dynamic> bookcase;
 
-  String getUserId(){
-    return auth.getCurrentUser().toString();
+  fromMap(Map<String, dynamic> data){
+    this.bios = data['bios'];
+    this.photo_url = data['photo_url'];
+    this.borrowedToUsers = data['borrowedToUsers'];
+    this.borrowedBooks = data['borrowedBooks'];
+    this.id = data['id'];
+    this.loanedBooks = data['loanedBooks'];
+    this.phone = data['phone'];
+    this.name = data['name'];
+    this.email = data['email'];
+    this.loanedToUsers = data['loanedToUsers'];
+    this.bookcase = data['bookcase'];
   }
-  Future<FirebaseUser> getUser() async {
-    return auth.getCurrentUser();
-  }
-  add_to_bookcase(Book book) {
-    db.collection('users')
-        .document(getUserId())
-        .collection('bookcase')
-        .add(book.data_like_json());
-  }
-
 
 }
