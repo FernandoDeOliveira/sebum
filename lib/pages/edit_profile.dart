@@ -142,7 +142,7 @@ class _EditProfileState extends State<EditProfile> {
                             _image,
                             fit: BoxFit.fill,
                           ):Image.network(
-                            "https://images.unsplash.com/photo-1502164980785-f8aa41d53611?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
+                            user.photo_url,
                             fit: BoxFit.fill,
                           ),
                         ),
