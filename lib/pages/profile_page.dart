@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:sebum/models/book.dart';
 import 'package:sebum/models/user.dart';
+import 'package:sebum/pages/message_page.dart';
 import 'package:sebum/services/authentication.dart';
 import 'package:sebum/services/firestoreDB.dart';
 
@@ -375,6 +376,16 @@ _signOut() async {
                   );
               }
             ),
+            new ListTile(
+                title: new Text("Solicitações de Livro"),
+                trailing: new Icon(Icons.arrow_right),
+                onTap: (){
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => MessagePage(userId: user.id))
+                  );
+                }
+            ),
              new ListTile(
               title: new Text("Sair"),
               trailing: new Icon(Icons.arrow_right),
@@ -409,10 +420,6 @@ _signOut() async {
                           _buildProfileImage(user.photo_url),
                           _buildFullName(user.name),
                           _buildStatus(context),
-                          _buildStatContainer(
-                              user.loanedBooks.length,
-                              user.borrowedBooks.length),
-                          _buildBio(context, user.bios),
                           _buildSeparator(screenSize),
                           SizedBox(height: 10.0),
                           _buildGetInTouch(context),
