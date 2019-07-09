@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:sebum/models/book.dart';
 import 'package:sebum/models/user.dart';
-import 'package:sebum/pages/message_page.dart';
+import 'package:sebum/pages/edit_profile.dart';  
 import 'package:sebum/services/authentication.dart';
 import 'package:sebum/services/firestoreDB.dart';
+import 'package:sebum/pages/message_page.dart';
+
+
 
 import 'bookcase.dart';
 
@@ -364,6 +367,16 @@ _signOut() async {
               trailing: new Icon(Icons.arrow_right),
               onTap: (){
                 Navigator.pop(context);
+              }
+            ),
+             new ListTile(
+              title: new Text("Editar Perfil"),
+              trailing: new Icon(Icons.arrow_right),
+              onTap: (){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => EditProfile(auth: widget.auth,userId: widget.userId,  onSignedOut: widget.onSignedOut,))
+                  );
               }
             ),
              new ListTile(
