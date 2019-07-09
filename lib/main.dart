@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sebum/pages/bookcase.dart';
+import 'package:sebum/pages/edit_profile.dart';
 import 'package:sebum/pages/home_page.dart';
-import 'package:sebum/pages/partials/book_shearch_widget.dart';
 import 'package:sebum/pages/root_page.dart';
 import 'package:sebum/services/authentication.dart';
 
@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.purple,
       ),
-      home:  BookSearchWidget()  //new RootPage(auth: new Auth()) //new Bookcase() //
+      home:  EditProfile() //new RootPage(auth: new Auth()) //new Bookcase() //
     );
   }
 }

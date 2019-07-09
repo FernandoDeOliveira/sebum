@@ -28,17 +28,17 @@ class SideMenu extends StatelessWidget{
               title: new Text("Minha Estante"),
               trailing: new Icon(Icons.arrow_right),
               onTap: (){
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Bookcase())
-                  );
+                // Navigator.push(
+                //   context,
+                //   // MaterialPageRoute(builder: (context) => Bookcase())
+                //   );
               }
             ),
              new ListTile(
               title: new Text("Sair"),
               trailing: new Icon(Icons.arrow_right),
               onTap: () {
-                _signOut();
+                // _signOut();
               }
             ),
             new Divider(),
