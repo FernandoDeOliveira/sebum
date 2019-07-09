@@ -19,6 +19,11 @@ abstract class BaseFirebase{
   
   Future<List<Book>> getUserBooks(String userId);
 
+  Future<void> requestBook( String userIdDest, String userIdSrc,
+      String userEmailSrc, String userPhotoSrc, String bookName);
+
+  Stream<QuerySnapshot> booksRequested(String userId);
+
 }
 
 class DB implements BaseFirebase{
@@ -75,5 +80,21 @@ class DB implements BaseFirebase{
     return books;
   }
 
+  Future<void> requestBook(String userIdDest, userNameSrc,
+      String userEmailSrc, String userPhotoSrc, String bookTitle) async{
 
+    await db.collection('users').document(userIdDest)
+        .collection('booksSolicitation').document()
+        .setData(
+        {'userName': userNameSrc,
+          'bookTitle': bookTitle,
+          'email': userEmailSrc,
+          'userPhoto': userPhotoSrc
+        }, merge: true);
+  }
+
+  Stream<QuerySnapshot> booksRequested(String userId)  {
+    return db.collection('users').document(userId)
+        .collection('booksSolicitation').snapshots();
+  }
 }

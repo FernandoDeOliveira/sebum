@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sebum/pages/login_signup_page.dart';
+import 'package:sebum/pages/message_page.dart';
 import 'package:sebum/pages/profile_page.dart';
 import 'package:sebum/services/authentication.dart';
 
