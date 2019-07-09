@@ -177,7 +177,7 @@ class _EditProfileState extends State<EditProfile> {
                           _showNameInput(),
                           Align(
                             alignment: Alignment.centerLeft,
-                            child: Text(user.name,
+                            child: Text("Usuario Teste",
                                 style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 20.0,
