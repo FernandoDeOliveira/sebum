@@ -15,7 +15,7 @@ abstract class BaseFirebase{
 
   Future<User> getUser(String userId);
 
-  Future<Book> getBook(String bookId);
+  Future<List<Book>> getAllBooks();
   
   Future<List<Book>> getUserBooks(String userId);
 
@@ -23,6 +23,8 @@ abstract class BaseFirebase{
       String userEmailSrc, String userPhotoSrc, String bookName);
 
   Stream<QuerySnapshot> booksRequested(String userId);
+
+  Future<void> uploadPhotoProfile(String userId, String photo_url);
 
 }
 
@@ -39,6 +41,9 @@ class DB implements BaseFirebase{
   }
 
   addToUserBookcase(String userId, String bookId) {
+    print(userId);
+    print(bookId);
+    print('book e user //////////');
   db.collection('books').document(bookId).get().then(
       (book) {
 
@@ -51,12 +56,21 @@ class DB implements BaseFirebase{
 
   }
 
-  Future<Book> getBook(String bookId) async{
-    var docRef = await db.collection('books').document(bookId);
-    var data = await docRef.get().then((document) => document.data);
-    Book book = Book();
-    book.fromMap(data);
-    return book;
+  Future<List<Book>> getAllBooks() async{
+    List<Map<String,dynamic>> booksAsJson = List<Map<String,dynamic>>();
+
+    await db.collection('books').getDocuments()
+        .then((books) => books.documents.forEach(
+            (book) => booksAsJson.add(book.data)));
+
+    List<Book> books = List<Book>();
+    for (var b in booksAsJson){
+      Book book = Book();
+      book.fromMap(b);
+      books.add(book);
+    }
+
+    return books;
   }
   
   Future<List<Book>> getUserBooks(String userId) async{
@@ -97,4 +111,12 @@ class DB implements BaseFirebase{
     return db.collection('users').document(userId)
         .collection('booksSolicitation').snapshots();
   }
+
+  Future<void> uploadPhotoProfile(String userId, String photo_url) async{
+    await db.collection('users').document(userId)
+        .setData({'photo_url': photo_url}, merge: true);
+
+
+  }
+
 }
