@@ -41,9 +41,6 @@ class DB implements BaseFirebase{
   }
 
   addToUserBookcase(String userId, String bookId) {
-    print(userId);
-    print(bookId);
-    print('book e user //////////');
   db.collection('books').document(bookId).get().then(
       (book) {
 
