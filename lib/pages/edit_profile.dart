@@ -110,7 +110,7 @@ class _EditProfileState extends State<EditProfile> {
               onPressed: () {
                 Navigator.pop(context);
               }),
-          title: Text('Edit Profile'),
+          title: Text('Editar Perfil'),
         ),
         body: FutureBuilder(
         future: getUserFromDB(),
