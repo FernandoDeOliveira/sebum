@@ -1,23 +1,74 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
-import 'package:sebum/pages/login_signup_page.dart';
-import 'package:sebum/models/mocks.dart';
+import 'package:sebum/models/book.dart';
+import 'package:sebum/services/firestoreDB.dart';
 
 class BookSearch extends StatefulWidget {
+  BookSearch({Key key, this.userId})
+      : super(key: key);
+
+  final String userId;
+
+
   @override
   _BookSearchState createState() => _BookSearchState();
 }
 
 class _BookSearchState extends State<BookSearch> {
+
+  List<Book> books = List<Book>();
+  List<Book> booksForDisplay = List<Book>();
+
+  Future<List<Book>> getAllBooksFromDB () async{
+    return await DB().getAllBooks();
+  }
+
+  @override
+  void initState(){
+    getAllBooksFromDB().then((_books){
+      setState(() {
+        books.addAll(_books);
+        booksForDisplay = books;
+      });
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      
+    return Scaffold(
+      // TODO implementar appbar
+      body: ListView.builder(
+        itemBuilder: (context, index){
+          return index == 0 ? _searchBar() : _buildCard(index -1);
+        },
+        itemCount: booksForDisplay.length + 1,
+      ),
     );
   }
 
-Widget _buildCard(book){
+  _searchBar() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: TextField(
+        decoration: InputDecoration(
+          hintText: "Buscar..."
+        ),
+        onChanged: (text){
+          text = text.toLowerCase();
+          setState(() {
+            booksForDisplay = books.where((_book) {
+              var bookTitle = _book.title.toLowerCase();
+              return bookTitle.contains(text);
+            }).toList();
+          });
+        },
+      ),
+    );
+  }
+
+_buildCard(index){
   return Card(
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(10.0)
@@ -26,24 +77,25 @@ Widget _buildCard(book){
       child: Row (
         children: <Widget>[
           new Container(
-            height: 200.0,
-            width: 400.0,
+            height: 100.0,
+            width: 200.0,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(30.0),
               image: DecorationImage(
-                image: NetworkImage(book.url_photo))
+                image: NetworkImage(books[index].photo_url))
               ),
           ),
           new Container(
             child: new Column(
               children: <Widget>[
-                Text(book.title),
-                Text(book.author),
+                Text(books[index].title),
+                Text(books[index].author),
                 FlatButton.icon(
                   color: Colors.purple[200],
                   label: Text("Add"),
                   icon: Icon(Icons.check),
-                  onPressed: (){
+                  onPressed: () async{
+                    await DB().addToUserBookcase(widget.userId, books[index].id);
 
                   },
 
@@ -121,7 +173,7 @@ Widget _buildCard(book){
 
          ],
          )
-         ,) 
+       ,)
    );
  }
 
