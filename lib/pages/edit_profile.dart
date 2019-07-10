@@ -169,7 +169,8 @@ class _EditProfileState extends State<EditProfile> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  Align(
+                  Expanded(
+                  child: Align(
                     alignment: Alignment.centerLeft,
                     child: Container(
                       child: Column(
@@ -187,14 +188,6 @@ class _EditProfileState extends State<EditProfile> {
                       ),
                     ),
                   ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Container(
-                      child: Icon(
-                        FontAwesomeIcons.pen,
-                        color: Color(0xff476cfb),
-                      ),
-                    ),
                   ),
                 ],
               ),
@@ -204,6 +197,8 @@ class _EditProfileState extends State<EditProfile> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
+                  Expanded(
+                  child:
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Container(
@@ -222,14 +217,6 @@ class _EditProfileState extends State<EditProfile> {
                       ),
                     ),
                   ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Container(
-                      child: Icon(
-                        FontAwesomeIcons.pen,
-                        color: Color(0xff476cfb),
-                      ),
-                    ),
                   ),
                 ],
               ),
@@ -239,6 +226,8 @@ class _EditProfileState extends State<EditProfile> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
+                  Expanded(
+                  child:
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Container(
@@ -257,14 +246,6 @@ class _EditProfileState extends State<EditProfile> {
                       ),
                     ),
                   ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Container(
-                      child: Icon(
-                        FontAwesomeIcons.pen,
-                        color: Color(0xff476cfb),
-                      ),
-                    ),
                   ),
                 ],
               ),
