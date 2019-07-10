@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:sebum/models/book.dart';
 import 'package:sebum/models/user.dart';
-import 'package:sebum/pages/edit_profile.dart';  
+import 'package:sebum/pages/booksearch.dart';
+import 'package:sebum/pages/edit_profile.dart';
+import 'package:sebum/pages/requestBookPage.dart';
 import 'package:sebum/services/authentication.dart';
 import 'package:sebum/services/firestoreDB.dart';
 import 'package:sebum/pages/message_page.dart';
@@ -380,12 +382,13 @@ _signOut() async {
               }
             ),
              new ListTile(
-              title: new Text("Minha Estante"),
+              title: new Text("Adicionar Livro a Estante"),
               trailing: new Icon(Icons.arrow_right),
               onTap: (){
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Bookcase())
+                  MaterialPageRoute(builder: (context) =>
+                      BookSearch(userId: widget.userId))
                   );
               }
             ),
@@ -396,6 +399,16 @@ _signOut() async {
                   Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => MessagePage(userId: user.id))
+                  );
+                }
+            ),
+            new ListTile(
+                title: new Text("Solicitar Livro"),
+                trailing: new Icon(Icons.arrow_right),
+                onTap: (){
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => RequestBookPage(userId: user.id))
                   );
                 }
             ),
