@@ -3,6 +3,7 @@ class Book {
   String _author;
   String _ISBN;
   String _photo_url;
+  String _id;
   List<dynamic> _usersOwningTheBooks;
 
   dataLikeJson () => {
@@ -43,12 +44,19 @@ class Book {
     _title = value;
   }
 
+  String get id => _id;
+
+  set id(String value) {
+    _id = value;
+  }
+
   fromMap(Map<String, dynamic> data){
     this.author = data['author'];
     this.photo_url = data['photo_url'];
     this.title = data['title'];
     this.usersOwningTheBooks = data['usersOwningTheBooks'];
     this.ISBN = data['ISBN'];
+    this.id = data['id'] == null? " ": data['id'] ;
 
   }
   
