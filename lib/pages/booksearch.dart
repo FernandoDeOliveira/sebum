@@ -92,7 +92,7 @@ _buildCard(index){
                 Text(books[index].author),
                 FlatButton.icon(
                   color: Colors.purple[200],
-                  label: Text("Add"),
+                  label: Text("Torna-se dono"),
                   icon: Icon(Icons.check),
                   onPressed: () async{
                     await DB().addToUserBookcase(widget.userId, books[index].id);

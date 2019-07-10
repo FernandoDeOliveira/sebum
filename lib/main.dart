@@ -18,6 +18,6 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.purple,
       ),
       home:  new RootPage(auth: new Auth()) //new Bookcase() //
-    );
+    ); 
   }
-}
+} 

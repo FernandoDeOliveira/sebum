@@ -382,7 +382,7 @@ _signOut() async {
               }
             ),
              new ListTile(
-              title: new Text("Adicionar Livro a Estante"),
+              title: new Text("Tornar-se dono de livro"),
               trailing: new Icon(Icons.arrow_right),
               onTap: (){
                 Navigator.push(

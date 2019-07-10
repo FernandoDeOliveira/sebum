@@ -34,7 +34,7 @@ class _EditProfileState extends State<EditProfile> {
 
   Widget _showNameInput() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0.0, 100.0, 0.0, 0.0),
+      padding: const EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 0.0),
       child: new TextFormField(
         maxLines: 1,
         autofocus: false,
@@ -50,7 +50,7 @@ class _EditProfileState extends State<EditProfile> {
 
    Widget _showPhoneInput() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0.0, 100.0, 0.0, 0.0),
+      padding: const EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 0.0),
       child: new TextFormField(
         maxLines: 1,
         autofocus: false,
@@ -66,7 +66,7 @@ class _EditProfileState extends State<EditProfile> {
 
    Widget _showEmailInput() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0.0, 100.0, 0.0, 0.0),
+      padding: const EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 0.0),
       child: new TextFormField(
         maxLines: 1,
         keyboardType: TextInputType.emailAddress,
@@ -94,14 +94,16 @@ class _EditProfileState extends State<EditProfile> {
 
     Future uploadPic(BuildContext context) async{
       String fileName = basename(_image.path);
-       StorageUploadTask task = FirebaseStorage.instance.ref()
-           .child('users_photo_profile')
-           .child(fileName.toString() + widget.userId.toString())
-           .putFile(_image);
-      String photo_url = (await task.onComplete).uploadSessionUri.toString();
-      print(photo_url);
-      print('************photo_url*********');
-      DB().uploadPhotoProfile(widget.userId, photo_url);
+       FirebaseStorage.instance.ref()
+       .child('users_photo_profile')
+       .child(fileName.toString() + widget.userId.toString())
+       .putFile(_image).onComplete.then((val) {
+         val.ref.getDownloadURL().then((url){
+           DB().uploadPhotoProfile(widget.userId, url);
+           print(url);
+           print('************photo_url*********');
+           });
+           });
 
        setState(() {
           print("Profile Picture uploaded");
@@ -126,9 +128,9 @@ class _EditProfileState extends State<EditProfile> {
                   } else{
                     User user = snapshot.data;
                     return Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
+          child: 
+            ListView(
+              children: <Widget>[
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
@@ -167,27 +169,14 @@ class _EditProfileState extends State<EditProfile> {
                 ],
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   Expanded(
-                  child: Align(
-                    alignment: Alignment.centerLeft,
                     child: Container(
-                      child: Column(
-                        children: <Widget>[
-                          _showNameInput(),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text("Usuario Teste",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 20.0,
-                                    fontWeight: FontWeight.bold)),
-                          ),
-                        ],
-                      ),
+                      child: _showNameInput(),
+                      margin: EdgeInsets.all(10),
+                      width: 350.0,
+                      height: 100.0,
                     ),
-                  ),
                   ),
                 ],
               ),
@@ -197,19 +186,13 @@ class _EditProfileState extends State<EditProfile> {
                   Expanded(
                   child:
                   Align(
-                    alignment: Alignment.centerLeft,
                     child: Container(
+                      margin: EdgeInsets.all(10),
+                      width: 350.0,
+                      height: 100.0,
                       child: Column(
                         children: <Widget>[
                           _showPhoneInput(),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text('1st April, 2000',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 20.0,
-                                    fontWeight: FontWeight.bold)),
-                          ),
                         ],
                       ),
                     ),
@@ -226,42 +209,20 @@ class _EditProfileState extends State<EditProfile> {
                   Expanded(
                   child:
                   Align(
-                    alignment: Alignment.centerLeft,
                     child: Container(
+                      margin: EdgeInsets.all(10),
+
+                      width: 350.0,
+                      height: 100.0,
                       child: Column(
                         children: <Widget>[
                           _showEmailInput(),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text('Paris, France',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 20.0,
-                                    fontWeight: FontWeight.bold)),
-                          ),
                         ],
                       ),
                     ),
                   ),
                   ),
                 ],
-              ),
-              Container(
-                margin: EdgeInsets.all(20.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Text('Email',
-                        style:
-                            TextStyle(color: Colors.blueGrey, fontSize: 18.0)),
-                    SizedBox(width: 20.0),
-                    Text('michelle123@gmail.com',
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.bold)),
-                  ],
-                ),
               ),
               SizedBox(
                 height: 20.0,
@@ -297,7 +258,7 @@ class _EditProfileState extends State<EditProfile> {
                 ],
               )
             ],
-          ),
+            ),
         );
         }
         },
