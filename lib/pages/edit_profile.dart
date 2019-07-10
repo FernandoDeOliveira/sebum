@@ -94,9 +94,15 @@ class _EditProfileState extends State<EditProfile> {
 
     Future uploadPic(BuildContext context) async{
       String fileName = basename(_image.path);
-       StorageReference firebaseStorageRef = FirebaseStorage.instance.ref().child(fileName);
-       StorageUploadTask uploadTask = firebaseStorageRef.putFile(_image);
-       StorageTaskSnapshot taskSnapshot=await uploadTask.onComplete;
+       StorageUploadTask task = FirebaseStorage.instance.ref()
+           .child('users_photo_profile')
+           .child(fileName.toString() + widget.userId.toString())
+           .putFile(_image);
+      String photo_url = (await task.onComplete).uploadSessionUri.toString();
+      print(photo_url);
+      print('************photo_url*********');
+      DB().uploadPhotoProfile(widget.userId, photo_url);
+
        setState(() {
           print("Profile Picture uploaded");
           Scaffold.of(context).showSnackBar(SnackBar(content: Text('Profile Picture Uploaded')));
@@ -123,16 +129,13 @@ class _EditProfileState extends State<EditProfile> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              SizedBox(
-                height: 20.0,
-              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Align(
                     alignment: Alignment.center,
                     child: CircleAvatar(
-                      radius: 100,
+                      radius: 80,
                       backgroundColor: Color(0xff476cfb),
                       child: ClipOval(
                         child: new SizedBox(
@@ -163,9 +166,6 @@ class _EditProfileState extends State<EditProfile> {
                   ),
                 ],
               ),
-              SizedBox(
-                height: 20.0,
-              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
@@ -190,9 +190,6 @@ class _EditProfileState extends State<EditProfile> {
                   ),
                   ),
                 ],
-              ),
-              SizedBox(
-                height: 20.0,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
