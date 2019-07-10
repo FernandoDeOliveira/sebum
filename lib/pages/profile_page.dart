@@ -252,7 +252,8 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-Widget _buildCard(String title, String author,String images) {
+
+Widget _buildCard(book) {
     return Card(
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0)
@@ -267,14 +268,14 @@ Widget _buildCard(String title, String author,String images) {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(30.0),
                         image: DecorationImage(
-                            image: NetworkImage(images)
+                            image: NetworkImage(book.photo_url)
                         )
                     ),
                   ),
 
                 ]),
             Text(
-              title,
+              book.title,
               style: TextStyle(
                 fontFamily: 'Quicksand',
                 fontWeight: FontWeight.bold,
@@ -282,7 +283,7 @@ Widget _buildCard(String title, String author,String images) {
               ),
             ),
             Text(
-              author,
+              book.author,
               style: TextStyle(
                   fontFamily: 'Quicksand',
                   fontWeight: FontWeight.bold,
@@ -318,15 +319,13 @@ Widget _buildCard(String title, String author,String images) {
             return Center(child: CircularProgressIndicator());
           } else{
           List<Book> books = snapshot.data;
-          return ListView (
+          return ListView.builder (
             scrollDirection: Axis.horizontal,
             shrinkWrap: true,
-            children: <Widget>[
-              _buildCard(books[0].title, books[0].author, books[0].photo_url),
-              _buildCard('livro de ouro da mitologia', 'Thomas Bulfinch',"http://books.google.com/books/content?id=wwKYjadAM5sC&printsec=frontcover&img=1&zoom=5&source=gbs_api"),
-              _buildCard('sao francisco', 'Tomas de Celano',"http://books.google.com/books/content?id=5A1qDwAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api"),
-              _buildCard('didascalicon', 'Hugo de São Vitor',"http://books.google.com/books/content?id=fVBwOdVw1DoC&printsec=frontcover&img=1&zoom=5&source=gbs_api"),
-            ],
+            itemBuilder: (context, index){
+              return _buildCard(books[index]);
+            },
+            itemCount:books.length,
           );}
         },
       ), // fim listview
@@ -346,7 +345,7 @@ _signOut() async {
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
     return new Scaffold(
-      appBar: new AppBar(title: new Text("Sebum")),
+      appBar: new AppBar(title: new Text("Perfil")),
       
       drawer: new Drawer(
         child: FutureBuilder(
@@ -430,7 +429,6 @@ _signOut() async {
       ),
       body: new Stack(
         children: <Widget>[
-          _buildCoverImage(screenSize),
           SafeArea(
               child: FutureBuilder(
                 future: getUserFromDB(),
@@ -442,15 +440,11 @@ _signOut() async {
                     return SingleChildScrollView(
                       child: Column(
                         children: <Widget>[
-                          SizedBox(height: 100),
+                          SizedBox(height: 50),
                           _buildProfileImage(user.photo_url),
                           _buildFullName(user.name),
-                          _buildStatus(context),
                           _buildSeparator(screenSize),
-                          SizedBox(height: 10.0),
-                          _buildGetInTouch(context),
                           SizedBox(height: 8.0),
-                          _buildButtons(),
                           _buildHorizontalList()
                         ],
                       ),
